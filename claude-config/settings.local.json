@@ -4,6 +4,18 @@
     "CLAUDE_CODE_ENABLE_DEBUG": "0"
   },
   "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(**/id_rsa)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/.ssh/*)",
+      "Read(**/credentials.json)",
+      "Read(**/config/database.yml)",
+      "Read(**/.aws/credentials)"
+    ],
     "allow": [
       "Read(**/*)",
       "Edit(**/*)",

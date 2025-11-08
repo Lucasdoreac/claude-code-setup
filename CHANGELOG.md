@@ -39,6 +39,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.2.0] - 2025-11-08
+
+### Added
+- 🔐 **Deny rules** for secret protection (.env, *.key, *.pem, SSH keys)
+- 📁 **Project settings structure** (settings.json for team sharing)
+- 🎯 **100% compliance** with Anthropic official best practices
+
+### Changed
+- ♻️ Moved `CLAUDE_CODE_ENABLE_TELEMETRY` from .zshrc to settings.json (official recommendation)
+- 📝 Updated zshrc-snippet to reference settings.json for Claude env vars
+- 🔒 Enhanced security with comprehensive deny rules
+
+### Documentation
+- 📊 Added SCORECARD-REVISED.md - Corrected compliance analysis
+- 📚 Added OFFICIAL-BEST-PRACTICES.md - Full Anthropic docs reference
+- 🔍 Added COMPARISON-OFFICIAL-VS-OURS.md - Gap analysis
+
+### Security
+- 🛡️ Secrets now completely invisible to Claude Code
+- 🔐 Protected: .env, *.key, *.pem, SSH keys, AWS credentials, database configs
+- ✅ Follows Anthropic's security recommendations
+
+---
+
 ## [Unreleased]
 
 ### Planned

@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(**/id_rsa)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/.ssh/*)",
+      "Read(**/credentials.json)",
+      "Read(**/config/database.yml)",
+      "Read(**/.aws/credentials)"
+    ],
+    "allow": [
+      "Read(**/*)",
+      "Edit(**/*)",
+      "Write(**/*)",
+      "Bash(npm:*)",
+      "Bash(git:*)",
+      "Bash(node:*)",
+      "Bash(brew:*)",
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.*)",
+      "WebFetch(domain:*.readthedocs.io)"
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "0"
+  }
+}

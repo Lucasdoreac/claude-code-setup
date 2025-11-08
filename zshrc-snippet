@@ -17,7 +17,7 @@ fi
 # ============================================
 # ENVIRONMENT VARIABLES
 # ============================================
-export CLAUDE_CODE_ENABLE_TELEMETRY=0
+# NOTE: Claude Code env vars are in ~/.claude/settings.local.json (recommended by Anthropic)
 # Add your custom environment variables here
 
 # ============================================

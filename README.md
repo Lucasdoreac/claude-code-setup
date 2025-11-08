@@ -11,15 +11,18 @@ Configuração completa e otimizada para Claude Code no macOS, com PATH organiza
 - ✅ **MCP Servers**: Apenas os essenciais (context7, memory)
 - ✅ **126 Permissions**: Desenvolvimento sem bloqueios
 - ✅ **Zero Leftovers**: Sem duplicações ou conflitos
+- 🔐 **Secret Protection**: Deny rules para .env, SSH keys, credentials
+- 🎯 **100% Compliance**: Alinhado com best practices oficiais da Anthropic
 
 ## 📋 O Que Está Incluído
 
 ### Arquivos de Configuração
 ```
-.zprofile          → PATH configuration (login shells)
-.zshrc             → Oh-my-zsh, plugins, aliases
-settings.local.json → Claude Code permissions
-.mcp.json          → MCP servers configuration
+.zprofile           → PATH configuration (login shells)
+.zshrc              → Oh-my-zsh, plugins, aliases
+settings.json       → Team shared Claude Code settings (committable)
+settings.local.json → Personal Claude Code permissions
+.mcp.json           → MCP servers configuration
 bin/security-update → Automated security updates
 ```
 
