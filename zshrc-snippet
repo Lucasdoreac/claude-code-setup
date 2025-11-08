@@ -1,0 +1,39 @@
+# ============================================
+# LANGUAGE VERSION MANAGERS
+# ============================================
+# NOTE: PATH is configured in ~/.zprofile (runs first in login shells)
+# This section only initializes version managers
+
+# NVM (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# pyenv (Python Version Manager) - if installed
+if command -v pyenv &> /dev/null; then
+  eval "$(pyenv init -)"
+fi
+
+# ============================================
+# ENVIRONMENT VARIABLES
+# ============================================
+export CLAUDE_CODE_ENABLE_TELEMETRY=0
+# Add your custom environment variables here
+
+# ============================================
+# ALIASES
+# ============================================
+# System
+alias ls='ls -G'
+alias ll='ls -la'
+alias l='ls -l'
+alias c='clear'
+alias ..='cd ..'
+alias ...='cd ../..'
+
+# Claude Code
+alias claude="$HOME/.claude/local/claude"
+alias claude-clean='pkill -f "claude" && pkill -f "mcp-server"'
+alias claude-debug='ps aux | grep -E "(claude|mcp)" | grep -v grep'
+
+# Add your custom aliases here

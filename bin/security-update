@@ -1,0 +1,100 @@
+#!/bin/bash
+# security-update - Atualização diária de segurança
+# Atualiza todos os gerenciadores de pacotes automaticamente
+# Criado: 2025-11-08
+
+set -e
+
+LOG_FILE="$HOME/.update-logs/security-update-$(date +%Y%m%d).log"
+mkdir -p "$HOME/.update-logs"
+
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+log "🔒 INICIANDO ATUALIZAÇÃO DE SEGURANÇA"
+log "========================================="
+
+# 1. HOMEBREW (CRÍTICO - inclui certificados SSL)
+log ""
+log "📦 [1/6] Atualizando Homebrew..."
+if brew update >> "$LOG_FILE" 2>&1; then
+    OUTDATED=$(brew outdated | wc -l | xargs)
+    if [ "$OUTDATED" -gt 0 ]; then
+        log "   → $OUTDATED pacotes desatualizados encontrados"
+        brew upgrade >> "$LOG_FILE" 2>&1 && log "   ✅ Homebrew atualizado ($OUTDATED pacotes)"
+    else
+        log "   ✅ Homebrew já está atualizado"
+    fi
+    brew cleanup -s >> "$LOG_FILE" 2>&1
+else
+    log "   ❌ Erro ao atualizar Homebrew"
+fi
+
+# 2. NPM GLOBAL (GitHub Copilot, Firebase, etc)
+log ""
+log "📦 [2/6] Atualizando NPM global..."
+if npm update -g >> "$LOG_FILE" 2>&1; then
+    log "   ✅ NPM global atualizado"
+else
+    log "   ❌ Erro ao atualizar NPM"
+fi
+
+# 3. PYTHON/PIP (ComfyUI e dependências)
+log ""
+log "📦 [3/6] Atualizando Python/pip..."
+OUTDATED_PIP=$(pip3 list --outdated 2>/dev/null | tail -n +3 | wc -l | xargs)
+if [ "$OUTDATED_PIP" -gt 0 ]; then
+    log "   → $OUTDATED_PIP pacotes Python desatualizados"
+    # Atualiza apenas pacotes críticos de segurança
+    pip3 list --outdated --format=freeze 2>/dev/null | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip3 install -U >> "$LOG_FILE" 2>&1 && log "   ✅ Python/pip atualizado ($OUTDATED_PIP pacotes)"
+else
+    log "   ✅ Python/pip já está atualizado"
+fi
+
+# 4. RUBY GEMS (Bundler e dependências - Homebrew Ruby 3.4)
+log ""
+log "📦 [4/6] Atualizando Ruby gems..."
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+if /opt/homebrew/opt/ruby/bin/gem update --system >> "$LOG_FILE" 2>&1 && /opt/homebrew/opt/ruby/bin/gem update >> "$LOG_FILE" 2>&1; then
+    log "   ✅ Ruby gems atualizados (Homebrew Ruby 3.4)"
+else
+    log "   ❌ Erro ao atualizar Ruby gems"
+fi
+
+# 5. macOS SYSTEM UPDATES (apenas listar, não instalar automaticamente)
+log ""
+log "📦 [5/6] Verificando atualizações do macOS..."
+MACOS_UPDATES=$(softwareupdate --list 2>&1 | grep "recommended" | wc -l | xargs)
+if [ "${MACOS_UPDATES:-0}" -gt 0 ]; then
+    log "   ⚠️  $MACOS_UPDATES atualizações do macOS disponíveis"
+    log "   → Execute: softwareupdate --install --recommended"
+else
+    log "   ✅ macOS está atualizado"
+fi
+
+# 6. LIMPAR CACHES DE SEGURANÇA
+log ""
+log "📦 [6/6] Limpando caches..."
+npm cache clean --force >> "$LOG_FILE" 2>&1
+brew cleanup -s >> "$LOG_FILE" 2>&1
+log "   ✅ Caches limpos"
+
+# RESUMO FINAL
+log ""
+log "========================================="
+log "✅ ATUALIZAÇÃO DE SEGURANÇA CONCLUÍDA"
+log "📊 Log salvo em: $LOG_FILE"
+
+# Limpar logs antigos (>30 dias)
+find "$HOME/.update-logs" -name "security-update-*.log" -mtime +30 -delete 2>/dev/null
+
+# Exibir resumo no terminal (se executado manualmente)
+if [ -t 1 ]; then
+    echo ""
+    echo "✅ Atualização concluída! Resumo:"
+    echo "   - Homebrew: $(brew outdated | wc -l | xargs) pacotes ainda desatualizados"
+    echo "   - NPM: $(npm outdated -g --depth=0 2>/dev/null | tail -n +2 | wc -l | xargs) pacotes ainda desatualizados"
+    echo "   - Python: $(pip3 list --outdated 2>/dev/null | tail -n +3 | wc -l | xargs) pacotes ainda desatualizados"
+    echo "   - Log: $LOG_FILE"
+fi
