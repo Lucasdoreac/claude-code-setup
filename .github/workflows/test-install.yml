@@ -1,0 +1,47 @@
+name: Test Installation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-install:
+    name: Test install.sh on macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+
+      - name: Test installer (dry run)
+        run: |
+          chmod +x install.sh
+          # Test syntax
+          bash -n install.sh
+          echo "✅ install.sh syntax is valid"
+
+      - name: Verify required files
+        run: |
+          test -f zprofile && echo "✅ zprofile exists"
+          test -f zshrc-snippet && echo "✅ zshrc-snippet exists"
+          test -f bin/security-update && echo "✅ security-update exists"
+          test -f claude-config/settings.local.json && echo "✅ settings.local.json exists"
+          test -f claude-config/mcp.json && echo "✅ mcp.json exists"
+
+      - name: Validate JSON files
+        run: |
+          jq empty claude-config/settings.local.json && echo "✅ settings.local.json valid"
+          jq empty claude-config/mcp.json && echo "✅ mcp.json valid"
+
+      - name: Check shell script permissions
+        run: |
+          test -x install.sh && echo "✅ install.sh executable"
+          test -x bin/security-update && echo "✅ security-update executable"

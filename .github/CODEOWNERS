@@ -1,0 +1,22 @@
+# Code Owners for Claude Code Setup
+# These owners will be the default reviewers for PRs
+
+# Global owners
+* @Lucasdoreac
+
+# Configuration files
+zprofile @Lucasdoreac
+zshrc-snippet @Lucasdoreac
+claude-config/* @Lucasdoreac
+
+# Scripts
+bin/* @Lucasdoreac
+install.sh @Lucasdoreac
+sync-to-github.sh @Lucasdoreac
+
+# Documentation
+docs/* @Lucasdoreac
+*.md @Lucasdoreac
+
+# GitHub workflows
+.github/workflows/* @Lucasdoreac

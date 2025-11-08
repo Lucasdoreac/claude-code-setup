@@ -1,0 +1,64 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          cat > release_notes.md << 'EOF'
+          ## 🚀 What's New
+
+          This release includes updates to the Claude Code setup configuration.
+
+          ## 📦 Installation
+
+          ### One-Line Install
+          \`\`\`bash
+          curl -fsSL https://raw.githubusercontent.com/Lucasdoreac/claude-code-setup/main/install.sh | bash
+          \`\`\`
+
+          ### Clone and Install
+          \`\`\`bash
+          git clone https://github.com/Lucasdoreac/claude-code-setup.git
+          cd claude-code-setup
+          ./install.sh
+          \`\`\`
+
+          ## ✅ What's Included
+          - PATH configuration optimized for macOS
+          - 126 Claude Code permissions
+          - MCP servers: context7, memory
+          - Automated security updates
+          - Complete documentation
+
+          ## 📝 Full Changelog
+          See [CHANGELOG.md](https://github.com/Lucasdoreac/claude-code-setup/blob/main/CHANGELOG.md)
+          EOF
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body_path: release_notes.md
+          draft: false
+          prerelease: false
+          generate_release_notes: true

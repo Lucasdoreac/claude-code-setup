@@ -1,0 +1,34 @@
+name: Update Documentation
+
+on:
+  push:
+    paths:
+      - 'zprofile'
+      - 'bin/security-update'
+      - 'claude-config/**'
+  workflow_dispatch:
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update README with latest info
+        run: |
+          # Add automatic timestamp to README
+          DATE=$(date +"%Y-%m-%d")
+          echo "Last Updated: $DATE" >> README.md
+
+      - name: Count permissions
+        run: |
+          PERMS=$(jq '.permissions.allow | length' claude-config/settings.local.json)
+          echo "📊 Permissions configured: $PERMS"
+
+      - name: Validate all configs
+        run: |
+          echo "Validating configurations..."
+          jq empty claude-config/*.json && echo "✅ All JSON configs valid"
+          bash -n bin/security-update && echo "✅ security-update syntax valid"
