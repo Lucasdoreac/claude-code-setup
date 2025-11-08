@@ -4,18 +4,6 @@
     "CLAUDE_CODE_ENABLE_DEBUG": "0"
   },
   "permissions": {
-    "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./secrets/**)",
-      "Read(**/id_rsa)",
-      "Read(**/*.key)",
-      "Read(**/*.pem)",
-      "Read(**/.ssh/*)",
-      "Read(**/credentials.json)",
-      "Read(**/config/database.yml)",
-      "Read(**/.aws/credentials)"
-    ],
     "allow": [
       "Read(**/*)",
       "Edit(**/*)",
@@ -146,7 +134,20 @@
       "Bash(zsh -l -c 'echo $PATH | tr \"\"\"\":\"\"\"\" \"\"\"\"\\n\"\"\"\" | nl')",
       "Bash(zsh -l -c 'which ruby && ruby --version && which gem')",
       "Bash(zsh:*)",
-      "Bash([ -f ~/.local/bin/env ])"
+      "Bash([ -f ~/.local/bin/env ])",
+      "WebFetch(domain:blog.gitbutler.com)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(**/id_rsa)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/.ssh/*)",
+      "Read(**/credentials.json)",
+      "Read(**/config/database.yml)",
+      "Read(**/.aws/credentials)"
     ]
   },
   "enableAllProjectMcpServers": true,
@@ -154,5 +155,40 @@
     "context7",
     "memory"
   ],
-  "outputStyle": "default"
+  "outputStyle": "default",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/bin/block-dangerous-commands.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/bin/smart-format.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude finished!\" with title \"Claude Code\" sound name \"Glass\"'"
+          }
+        ]
+      }
+    ]
+  }
 }
