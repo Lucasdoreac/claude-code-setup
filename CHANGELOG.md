@@ -39,6 +39,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.3.0] - 2025-11-08
+
+### Added
+- 🪝 **Production-ready hooks** (based on 95% usage online)
+  - PreToolUse: Security hook blocking dangerous bash commands
+  - PostToolUse: Smart format hook (multi-language support)
+  - Stop: macOS notifications when Claude finishes
+- 📦 **Hook scripts**
+  - `bin/smart-format.sh` - Intelligent formatter (JS/TS/PHP/Python)
+  - `bin/block-dangerous-commands.sh` - Security blocker (15+ patterns)
+
+### Features
+- ✨ **Auto-format**: Prettier + ESLint for JavaScript/TypeScript
+- 🎨 **Multi-language**: PHP-CS-Fixer, Black (Python) support
+- 🛡️ **Security**: Blocks rm -rf, chmod 777, fork bombs, etc.
+- 🔔 **Notifications**: macOS alerts with sound
+- 🧠 **Smart detection**: Applies correct formatter per file type
+
+### Documentation
+- HOOKS-CONFIGURED.md - Complete hooks guide
+- TOP-HOOKS-USED-ONLINE.md - Research of most popular hooks
+
+---
+
 ## [1.2.0] - 2025-11-08
 
 ### Added
